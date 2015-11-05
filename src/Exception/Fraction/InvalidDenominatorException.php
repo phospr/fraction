@@ -15,6 +15,6 @@ namespace Phospr\Exception\Fraction;
  * @author Tom Haskins-Vaughan <tom@tomhv.uk>
  * @since  0.1.0
  */
-class InvalidDenominatorException extends InvalidArgumentException
+class InvalidDenominatorException extends \InvalidArgumentException
 {
 }
