@@ -1,5 +1,5 @@
 {
-    "name": "phospr/fractions",
+    "name": "phospr/fraction",
     "description": "A composer-installable fractions library",
     "license": "MIT",
     "minimum-stability": "dev",
