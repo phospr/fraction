@@ -24,10 +24,29 @@ class FractionTest extends \PHPUnit_Framework_TestCase
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
      * @since  0.2.0
+     *
+     * @dataProvider isIntProvider
      */
     public function testIsInt()
     {
         $this->assertTrue(is_int(10));
+    }
+
+    /**
+     * is_int() provider
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.2.0
+     *
+     * @return array
+     */
+    public static function isIntProvider()
+    {
+        return [
+            [1],
+            [2045],
+            [-14],
+        ];
     }
 
     /**
