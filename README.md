@@ -1,4 +1,4 @@
-# Fraction
+# Phospr Fraction
 
 Composer-installable fractions for PHP
 
