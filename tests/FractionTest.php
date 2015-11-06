@@ -20,6 +20,17 @@ use Phospr\Fraction;
 class FractionTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Test is_int
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.2.0
+     */
+    public function testIsInt()
+    {
+        $this->assertTrue(is_int(10));
+    }
+
+    /**
      * Some assumptions I have made while developing this package
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
