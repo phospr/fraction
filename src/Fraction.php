@@ -9,6 +9,7 @@
 
 namespace Phospr;
 
+use InvalidArgumentException;
 use Phospr\Exception\Fraction\InvalidDenominatorException;
 use Phospr\Exception\Fraction\InvalidNumeratorException;
 
@@ -295,6 +296,42 @@ class Fraction
     public function isInteger()
     {
         return (1 === $this->getDenominator());
+    }
+
+    /*
+     * Create from float
+     *
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
+     * @since  0.2.0
+     *
+     * @param float $float
+     *
+     * return Fraction
+     */
+    public static function fromFloat($float)
+    {
+        // Make sure the float is a float not scientific notation.
+        // Limit a max of 8 chars to prevent float errors
+        $float = rtrim(sprintf('%.8F', $float), 0);
+
+        if (!is_numeric($float)) {
+            throw new InvalidArgumentException("Argument passed is not a numeric value.");
+        }
+
+        // Find and grab the decimal space and everything after it
+        if (false !== ($denominator = strstr($float, '.'))) {
+            // Pad a one with zeros for the length of the decimal places
+            // ie  0.1 = 10; 0.02 = 100; 0.01234 = 100000;
+            $denominator = (int) str_pad('1', strlen($denominator), 0);
+            // Multiply to get rid of the decimal places.
+            $numerator = (int) ($float*$denominator);
+        } else {
+            // No decimal places, this is a whole number
+            $numerator = (int) $float;
+            $denominator = 1;
+        }
+
+        return new self($numerator, $denominator);
     }
 
     /**
