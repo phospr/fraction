@@ -250,6 +250,22 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test fromFloat()
+     *
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
+     * @since  0.2.0
+     *
+     * @dataProvider fromFloatProvider
+     */
+    public function testFromFloat($float, $numerator, $denominator)
+    {
+        $fraction = Fraction::fromFloat($float);
+
+        $this->assertSame($numerator, $fraction->getNumerator());
+        $this->assertSame($denominator, $fraction->getDenominator());
+    }
+
+    /**
      * Test toFloat()
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -457,6 +473,48 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(14, 7, true),
             array(-14, 7, true),
         );
+    }
+
+
+    /**
+     * From float provider
+     *
+     * @author Christopher Tatro <ctatro@janeiredale.com>
+     * @since  0.2.0
+     *
+     * @return array
+     */
+    public static function fromFloatProvider()
+    {
+        return [
+              [12345.1234, 61725617, 5000],
+              [9999.9999, 99999999, 10000],
+              [0.000001, 1, 1000000],
+              [0.0215011, 215011, 10000000],
+              [0.0000025000, 1, 400000],
+              [0.00001, 1, 100000],
+              [1.25, 5, 4],
+              [1.3245, 2649, 2000],
+              [0.23, 23, 100],
+              [1, 1, 1],
+              [5.5000, 11, 2],
+              [6.375, 51, 8],
+              [235.63247, 23563247, 100000],
+              // Test some negatives
+              [-0.0215011, -215011, 10000000],
+              [-0.0000025000, -1, 400000],
+              [-0.00001, -1, 100000],
+              [-1.25, -5, 4],
+              [-1.3245, -2649, 2000],
+              // Test some strings
+              ['1', 1, 1],
+              ['5', 5, 1],
+              ['5.5000', 11, 2],
+              ['6.375', 51, 8],
+              ['-6.375', -51, 8],
+              ['-1.25', -5, 4],
+              ['-0.00001', -1, 100000],
+          ];
     }
 
     /**
