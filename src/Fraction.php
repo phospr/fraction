@@ -178,13 +178,6 @@ class Fraction
         $a = $this->numerator;
         $b = $this->denominator;
 
-        // if the gmp_gcd function is available, use it, on the assumption
-        // that it will perform better
-        // http://php.net/manual/en/function.gmp-gcd.php
-        if (function_exists('gmp_gcd')) {
-            return gmp_gcd($a, $b);
-        }
-
         // ensure no negative values
         $a = abs($a);
         $b = abs($b);
