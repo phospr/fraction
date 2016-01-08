@@ -1,6 +1,6 @@
 # Phospr Fraction
 
-Composer-installable fractions for PHP
+Composer-installable fractions for PHP [![Build Status](https://travis-ci.org/phospr/fraction.svg)](https://travis-ci.org/phospr/fraction)
 
 ## Usage
 
