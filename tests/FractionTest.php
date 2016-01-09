@@ -329,6 +329,36 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test fromString
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.4.0
+     *
+     * @dataProvider fromStringProvider
+     */
+    public function testFromString($fromString, $toString)
+    {
+        $this->assertSame(
+            $toString,
+            (string) Fraction::fromString($fromString)
+        );
+    }
+
+    /**
+     * Test fromString exception
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.4.0
+     *
+     * @expectedException \InvalidArgumentException
+     * @dataProvider fromStringExceptionProvider
+     */
+    public function testFromStringException($string)
+    {
+        Fraction::fromString($string);
+    }
+
+    /**
      * __toString provider
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -532,5 +562,57 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(1, 4, 0.25),
             array(1, 8, 0.125),
         );
+    }
+
+    /**
+     * fromString provider
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.4.0
+     *
+     * @return array
+     */
+    public static function fromStringProvider()
+    {
+        return [
+            ['1/3', '1/3'],
+            ['-1/3', '-1/3'],
+            [' 1/3 ', '1/3'],
+            ['1/3 ', '1/3'],
+            [' 1/3', '1/3'],
+            ['1/20', '1/20'],
+            ['-1/20', '-1/20'],
+            ['40', '40'],
+            ['-40', '-40'],
+            ['3 4/5', '3 4/5'],
+#            ['-3 4/5', '-3 4/5'],
+#            ['20 34/67', '20 34/67'],
+#            ['-20 34/67', '-20 34/67'],
+            ['40/20', '2'],
+            ['-40/20', '-2'],
+            ['40/2', '20'],
+            ['-40/2', '-20'],
+        ];
+    }
+
+    /**
+     * fromString exception provider
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.4.0
+     *
+     * @return array
+     */
+    public static function fromStringExceptionProvider()
+    {
+        return [
+            ['1 4/3 6'],
+            ['1/4 3/6'],
+            ['1 /3'],
+            ['-1/-3'],
+            ['1/'],
+            ['/1'],
+            ['10 4'],
+        ];
     }
 }

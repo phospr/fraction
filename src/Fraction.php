@@ -24,6 +24,13 @@ use Phospr\Exception\Fraction\InvalidNumeratorException;
 class Fraction
 {
     /**
+     * From string regex pattern
+     *
+     * @var string
+     */
+    const PATTERN_FROM_STRING = '#^(-?\d+)(?:(?: (\d+))?/(\d+))?$#';
+
+    /**
      * numerator
      *
      * @var integer
@@ -327,6 +334,52 @@ class Fraction
         }
 
         return new self($numerator, $denominator);
+    }
+
+    /**
+     * Create from string, e.g.
+     *
+     *     * 1/3
+     *     * 1/20
+     *     * 40
+     *     * 3 4/5
+     *     * 20 34/67
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.4.0
+     *
+     * @param string $string
+     *
+     * return Fraction
+     */
+    public static function fromString($string)
+    {
+        if (preg_match(self::PATTERN_FROM_STRING, trim($string), $matches)) {
+            switch (count($matches)) {
+                case 2:
+                    // whole number
+                    return new self((int) $matches[1]);
+                case 4:
+                    // either x y/z or x/y
+                    if ($matches[2]) {
+                        // x y/z
+                        $whole = new self((int) $matches[1]);
+
+                        return $whole->add(new self(
+                            (int) $matches[2],
+                            (int) $matches[3]
+                        ));
+                    }
+
+                    // x/y
+                    return new self((int) $matches[1], (int) $matches[3]);
+            }
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Cannot parse "%s"',
+            $string
+        ));
     }
 
     /**
