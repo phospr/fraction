@@ -310,15 +310,15 @@ class Fraction
      */
     public static function fromFloat($float)
     {
-        // Make sure the float is a float not scientific notation.
-        // Limit a max of 8 chars to prevent float errors
-        $float = rtrim(sprintf('%.8F', $float), 0);
-
         if (!is_numeric($float)) {
             throw new InvalidArgumentException(
                 'Argument passed is not a numeric value.'
             );
         }
+
+        // Make sure the float is a float not scientific notation.
+        // Limit a max of 8 chars to prevent float errors
+        $float = rtrim(sprintf('%.8F', $float), 0);
 
         // Find and grab the decimal space and everything after it
         if (false !== ($denominator = strstr($float, '.'))) {

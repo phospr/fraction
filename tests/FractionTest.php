@@ -266,6 +266,20 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test fromFloat() exceptions
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.5.0
+     *
+     * @dataProvider fromFloatExceptionProvider
+     * @expectedException InvalidArgumentException
+     */
+    public function testFromFloatException($float)
+    {
+        $fraction = Fraction::fromFloat($float);
+    }
+
+    /**
      * Test toFloat()
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -544,6 +558,27 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             ['-1.25', -5, 4],
             ['-0.00001', -1, 100000],
         ];
+    }
+
+    /**
+     * fromFloat exception provider
+     *
+     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
+     * @since  0.5.0
+     *
+     * @return array
+     */
+    public static function fromFloatExceptionProvider()
+    {
+        return [
+              ['foo'],
+              ['1.2.3'],
+              ['1T'],
+              ['- 5'],
+              ['1/2'],
+              ['seven'],
+              ['r009'],
+          ];
     }
 
     /**
