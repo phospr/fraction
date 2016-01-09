@@ -291,7 +291,7 @@ class Fraction
         return (1 === $this->getDenominator());
     }
 
-    /*
+    /**
      * Create from float
      *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
@@ -308,7 +308,9 @@ class Fraction
         $float = rtrim(sprintf('%.8F', $float), 0);
 
         if (!is_numeric($float)) {
-            throw new InvalidArgumentException("Argument passed is not a numeric value.");
+            throw new InvalidArgumentException(
+                'Argument passed is not a numeric value.'
+            );
         }
 
         // Find and grab the decimal space and everything after it
