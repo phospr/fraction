@@ -97,11 +97,3 @@ Add package to your composer.json file
     }
 }
 ```
-
-## Disclaimer
-
-I googled first to find something similar, but only came across the [pear](https://pear.php.net) [Math_Fraction](https://pear.php.net/package/Math_Fraction) library, and since I'm a lazy arse, that didn't apeal.  If anyone knows of one available on [packagist](http://packagist.com), please let me know.
-
-Cheers,
-
-Tom
