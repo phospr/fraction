@@ -20,57 +20,6 @@ use Phospr\Fraction;
 class FractionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test is_int
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.2.0
-     *
-     * @dataProvider isIntProvider
-     */
-    public function testIsInt()
-    {
-        $this->assertTrue(is_int(10));
-    }
-
-    /**
-     * is_int() provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.2.0
-     *
-     * @return array
-     */
-    public static function isIntProvider()
-    {
-        return [
-            [1],
-            [2045],
-            [-14],
-        ];
-    }
-
-    /**
-     * Some assumptions I have made while developing this package
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     */
-    public function testAssumptions()
-    {
-        // floats are not the same as integers
-        $this->assertNotSame(1, 1.0);
-        $this->assertEquals(1, 1.0);
-
-        // floats are not the same as integers
-        $this->assertNotSame(1, 4.0/4.0);
-        $this->assertEquals(1, 4.0/4.0);
-
-        // integers are not the same as strings
-        $this->assertNotSame(1, '1');
-        $this->assertEquals(1, '1');
-    }
-
-    /**
      * Test half
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
