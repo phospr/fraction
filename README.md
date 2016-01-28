@@ -1,6 +1,7 @@
 # Phospr Fraction
 
 [![Build Status](https://travis-ci.org/phospr/fraction.svg)](https://travis-ci.org/phospr/fraction)
+[![Coverage Status](https://coveralls.io/repos/github/phospr/fraction/badge.svg?branch=master)](https://coveralls.io/github/phospr/fraction?branch=master)
 
 Composer-installable fractions for PHP
 
