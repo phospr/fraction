@@ -8,5 +8,12 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
+  - mkdir -p build/logs
+  - composer require satooshi/php-coveralls:~0.6@stable
 
-script: vendor/bin/phpunit --colors tests
+script:
+  - vendor/bin/phpunit --colors tests
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml tests
+
+after_success:
+  - php vendor/bin/coveralls -v
