@@ -589,6 +589,7 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     public static function fromStringExceptionProvider()
     {
         return [
+            ['tom'],
             ['1 4/3 6'],
             ['1/4 3/6'],
             ['1 /3'],

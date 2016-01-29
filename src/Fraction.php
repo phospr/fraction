@@ -310,6 +310,10 @@ class Fraction
      */
     public static function fromFloat($float)
     {
+        if (is_int($float)) {
+            return new self($float);
+        }
+
         if (!is_numeric($float)) {
             throw new InvalidArgumentException(
                 'Argument passed is not a numeric value.'
@@ -321,17 +325,13 @@ class Fraction
         $float = rtrim(sprintf('%.8F', $float), 0);
 
         // Find and grab the decimal space and everything after it
-        if (false !== ($denominator = strstr($float, '.'))) {
-            // Pad a one with zeros for the length of the decimal places
-            // ie  0.1 = 10; 0.02 = 100; 0.01234 = 100000;
-            $denominator = (int) str_pad('1', strlen($denominator), 0);
-            // Multiply to get rid of the decimal places.
-            $numerator = (int) ($float*$denominator);
-        } else {
-            // No decimal places, this is a whole number
-            $numerator = (int) $float;
-            $denominator = 1;
-        }
+        $denominator = strstr($float, '.');
+
+        // Pad a one with zeros for the length of the decimal places
+        // ie  0.1 = 10; 0.02 = 100; 0.01234 = 100000;
+        $denominator = (int) str_pad('1', strlen($denominator), 0);
+        // Multiply to get rid of the decimal places.
+        $numerator = (int) ($float*$denominator);
 
         return new self($numerator, $denominator);
     }
@@ -355,24 +355,23 @@ class Fraction
     public static function fromString($string)
     {
         if (preg_match(self::PATTERN_FROM_STRING, trim($string), $matches)) {
-            switch (count($matches)) {
-                case 2:
-                    // whole number
-                    return new self((int) $matches[1]);
-                case 4:
-                    // either x y/z or x/y
-                    if ($matches[2]) {
-                        // x y/z
-                        $whole = new self((int) $matches[1]);
+            if (2 === count($matches)) {
+                // whole number
+                return new self((int) $matches[1]);
+            } else {
+                // either x y/z or x/y
+                if ($matches[2]) {
+                    // x y/z
+                    $whole = new self((int) $matches[1]);
 
-                        return $whole->add(new self(
-                            (int) $matches[2],
-                            (int) $matches[3]
-                        ));
-                    }
+                    return $whole->add(new self(
+                        (int) $matches[2],
+                        (int) $matches[3]
+                    ));
+                }
 
-                    // x/y
-                    return new self((int) $matches[1], (int) $matches[3]);
+                // x/y
+                return new self((int) $matches[1], (int) $matches[3]);
             }
         }
 
