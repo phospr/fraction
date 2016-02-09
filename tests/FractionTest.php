@@ -322,6 +322,26 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test isSameValueAs
+     *
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
+     * @since 1.1.0
+     *
+     * @dataProvider isSameValueAsProvider
+     */
+    public function testIsSameValueAs(
+        $numerator1,
+        $denominator1,
+        $numerator2,
+        $denominator2,
+        $result
+    ) {
+        $fraction = new Fraction($numerator1, $denominator1);
+
+        $this->assertSame($result, $fraction->isSameValueAs(new Fraction($numerator2, $denominator2)));
+    }
+
+    /**
      * __toString provider
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -597,6 +617,36 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             ['1/'],
             ['/1'],
             ['10 4'],
+        ];
+    }
+
+    /**
+     * isSameValueAsProvider
+     *
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
+     * @since  1.1.0
+     *
+     * @return array
+     */
+    public static function isSameValueAsProvider()
+    {
+        return [
+            [1, 2, 1, 2, true],
+            [1, 3, 2, 6, true],
+            [2, 2, 3, 3, true],
+            [4, 2, 8, 4, true],
+            [1, 1, 1, 2, false],
+            [3, 2, 4, 2, false],
+            [1, 4, 1, 2, false],
+            [1650, 2, 825, 1, true],
+            [-1, 3, -2, 6, true],
+            [-6550, 50, -131, 1, true],
+            [-4, 2, -4, 2, true],
+            [4, 2, -4, 2, false],
+            [-4, 2, 4, 2, false],
+            [4, 2, 4, 2, true],
+            [2605020, 159780620, 130251, 7989031, true],
+            [-2605020, 159780620, -130251, 7989031, true],
         ];
     }
 }

@@ -393,4 +393,29 @@ class Fraction
     {
         return $this->getNumerator()/$this->getDenominator();
     }
+
+    /**
+     * isSameValueAs
+     *
+     * ValueObject comparison
+     *
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
+     * @since 1.1.0
+     *
+     * @param Fraction $fraction
+     *
+     * @return bool
+     */
+    public function isSameValueAs(Fraction $fraction)
+    {
+        if ($this->getNumerator() != $fraction->getNumerator()) {
+            return false;
+        }
+
+        if ($this->getDenominator() != $fraction->getDenominator()) {
+            return false;
+        }
+
+        return true;
+    }
 }
