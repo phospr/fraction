@@ -53,7 +53,7 @@ class Fraction
      * @param integer $numerator
      * @param integer $denominator
      */
-    public function __construct($numerator, $denominator = 1)
+    public function __construct($numerator, $denominator = 1, $shouldSimplify = true)
     {
         if (!is_int($numerator)) {
             throw new InvalidNumeratorException(
@@ -83,7 +83,9 @@ class Fraction
         $this->numerator = (int) $numerator;
         $this->denominator = (int) $denominator;
 
-        $this->simplify();
+        if ($shouldSimplify) {
+            $this->simplify();
+        }
     }
 
     /**

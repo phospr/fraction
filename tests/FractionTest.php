@@ -34,6 +34,15 @@ class FractionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $half->getDenominator());
     }
 
+    public function testDontSimplify()
+    {
+        $half = new Fraction(2, 4, false);
+
+        $this->assertEquals('2/4', (string) $half);
+        $this->assertSame(2, $half->getNumerator());
+        $this->assertSame(4, $half->getDenominator());
+    }
+
     /**
      * Test __toString()
      *
