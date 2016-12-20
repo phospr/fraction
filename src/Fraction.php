@@ -40,7 +40,7 @@ class Fraction
     /**
      * denominator
      *
-     * @var initeger
+     * @var integer
      */
     private $denominator;
 
