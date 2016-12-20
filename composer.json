@@ -20,5 +20,8 @@
         "psr-4": {
             "Phospr\\": "src"
         }
-    }
+    },
+    "scripts": {
+        "test": "phpunit tests"
+     }
 }
