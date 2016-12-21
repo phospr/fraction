@@ -322,14 +322,14 @@ class Fraction
 
         // Make sure the float is a float not scientific notation.
         // Limit a max of 8 chars to prevent float errors
-        $float = rtrim(sprintf('%.8F', $float), 0);
+        $float = rtrim(sprintf('%.8F', $float), '0');
 
         // Find and grab the decimal space and everything after it
         $denominator = strstr($float, '.');
 
         // Pad a one with zeros for the length of the decimal places
         // ie  0.1 = 10; 0.02 = 100; 0.01234 = 100000;
-        $denominator = (int) str_pad('1', strlen($denominator), 0);
+        $denominator = (int) str_pad('1', strlen($denominator), '0');
         // Multiply to get rid of the decimal places.
         $numerator = (int) ($float*$denominator);
 
