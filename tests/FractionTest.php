@@ -215,20 +215,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test fromFloat() exceptions
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.5.0
-     *
-     * @dataProvider fromFloatExceptionProvider
-     * @expectedException InvalidArgumentException
-     */
-    public function testFromFloatException($float)
-    {
-        $fraction = Fraction::fromFloat($float);
-    }
-
-    /**
      * Test toFloat()
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -251,20 +237,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test bad denominator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @expectedException Phospr\Exception\Fraction\InvalidDenominatorException
-     * @dataProvider badIntegerProvider
-     */
-    public function testBadDenominator($denominator)
-    {
-        $fraction = new Fraction(1, $denominator);
-    }
-
-    /**
      * Test negative denominator
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -275,20 +247,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     public function testNegativeDenominator()
     {
         $fraction = new Fraction(1, -1);
-    }
-
-    /**
-     * Test bad numerator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @expectedException Phospr\Exception\Fraction\InvalidNumeratorException
-     * @dataProvider badIntegerProvider
-     */
-    public function testBadNumerator($numerator)
-    {
-        $fraction = new Fraction($numerator, 1);
     }
 
     /**
@@ -365,29 +323,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(1, 4, '1/4'),
             array(7, 7, '1'),
             array(7, 21, '1/3'),
-        );
-    }
-
-    /**
-     * Bad integer provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function badIntegerProvider()
-    {
-        return array(
-            array(null),
-            array(0.4),
-            array(.5),
-            array(''),
-            array(' '),
-            array(1.0),
-            array('5'),
-            array('5i'),
-            array('hello'),
         );
     }
 
@@ -530,27 +465,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * fromFloat exception provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.5.0
-     *
-     * @return array
-     */
-    public static function fromFloatExceptionProvider()
-    {
-        return [
-              ['foo'],
-              ['1.2.3'],
-              ['1T'],
-              ['- 5'],
-              ['1/2'],
-              ['seven'],
-              ['r009'],
-          ];
-    }
-
-    /**
      * To float provider
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -561,7 +475,7 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     public static function toFloatProvider()
     {
         return array(
-            array(1, 1, 1),
+            array(1, 1, 1.0),
             array(1, 4, 0.25),
             array(1, 8, 0.125),
         );
