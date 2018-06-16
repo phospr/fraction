@@ -10,6 +10,7 @@
 namespace Phospr\Tests;
 
 use Phospr\Fraction;
+use PHPUnit\Framework\TestCase;
 
 /**
  * FractionTest
@@ -17,7 +18,7 @@ use Phospr\Fraction;
  * @author Tom Haskins-Vaughan <tom@tomhv.uk>
  * @since  0.1.0
  */
-class FractionTest extends \PHPUnit_Framework_TestCase
+class FractionTest extends TestCase
 {
     /**
      * Test half
