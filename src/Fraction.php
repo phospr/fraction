@@ -99,11 +99,15 @@ class Fraction
      */
     protected function checkLimits($numerator, $denominator)
     {
-        if (($max = max($numerator, $denominator)) < PHP_INT_MAX) {
+        if (($max = max(abs($numerator), abs($denominator))) < PHP_INT_MAX) {
             return [$numerator, $denominator];
         }
 
-        $divisor = $this->getDivisor($max);
+        $divisor = min(
+            abs($this->getDivisor($max)),
+            abs($numerator),
+            abs($denominator)
+        );
 
         return [
             intval($numerator / $divisor),
@@ -121,7 +125,7 @@ class Fraction
     {
         $divisor = 1;
 
-        while ($number > PHP_INT_MAX) {
+        while ($number >= PHP_INT_MAX) {
             $divisor *= 10;
             $number /= 10;
         }
