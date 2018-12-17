@@ -20,6 +20,67 @@ use Phospr\Fraction;
 class FractionTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Big Even Fractions provider
+     *
+     * @return array
+     */
+    public static function bigEvenFractionsProvider()
+    {
+        return array(
+            array(PHP_INT_MAX * 2, PHP_INT_MAX * 4, 1, 2),
+            array(PHP_INT_MAX, PHP_INT_MAX * 8, 1, 8),
+            array(-PHP_INT_MAX * 4, PHP_INT_MAX, -4, 1),
+            array(-PHP_INT_MAX * 8, PHP_INT_MAX * 2, -4, 1),
+        );
+    }
+
+    /**
+     * Test Big Even Fractions.
+     *
+     * @dataProvider bigEvenFractionsProvider
+     */
+    public function testBigEvenFractions(
+        $numerator,
+        $denominator,
+        $expectedNumerator,
+        $expectedDenominator
+    ) {
+        $fraction = new Fraction($numerator, $denominator);
+        $this->assertEquals($fraction->getNumerator(), $expectedNumerator);
+        $this->assertEquals($fraction->getDenominator(), $expectedDenominator);
+    }
+
+    /**
+     * Big Odd Fraction provider
+     *
+     * @return array
+     */
+    public static function bigOddFractionsProvider()
+    {
+        return array(
+            array(PHP_INT_MAX * 1, PHP_INT_MAX * 3, '1/3'),
+            array(PHP_INT_MAX * 2, PHP_INT_MAX * 9, '2/9'),
+            array(-PHP_INT_MAX * 5, PHP_INT_MAX * 8, '-5/8'),
+            array(-PHP_INT_MAX * 7, PHP_INT_MAX * 3, '-7/3'),
+        );
+    }
+
+    /**
+     * Test Big Odd Fractions.
+     *
+     * @dataProvider bigOddFractionsProvider
+     */
+    public function testBigOddFractions(
+        $numerator,
+        $denominator,
+        $expectedFraction
+    ) {
+        $fraction = new Fraction($numerator, $denominator);
+        $expected = Fraction::fromString($expectedFraction);
+        $this->assertLessThan(0.000000000001, abs($fraction->subtract($expected)->toFloat()));
+    }
+
+    /**
      * Test half
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
