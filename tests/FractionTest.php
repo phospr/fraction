@@ -24,40 +24,13 @@ class FractionTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public static function bigEvenFractionsProvider()
+    public static function bigFractionsProvider()
     {
         return array(
-            array(PHP_INT_MAX * 2, PHP_INT_MAX * 4, 1, 2),
-            array(PHP_INT_MAX, PHP_INT_MAX * 8, 1, 8),
-            array(-PHP_INT_MAX * 4, PHP_INT_MAX, -4, 1),
-            array(-PHP_INT_MAX * 8, PHP_INT_MAX * 2, -4, 1),
-        );
-    }
-
-    /**
-     * Test Big Even Fractions.
-     *
-     * @dataProvider bigEvenFractionsProvider
-     */
-    public function testBigEvenFractions(
-        $numerator,
-        $denominator,
-        $expectedNumerator,
-        $expectedDenominator
-    ) {
-        $fraction = new Fraction($numerator, $denominator);
-        $this->assertEquals($fraction->getNumerator(), $expectedNumerator);
-        $this->assertEquals($fraction->getDenominator(), $expectedDenominator);
-    }
-
-    /**
-     * Big Odd Fraction provider
-     *
-     * @return array
-     */
-    public static function bigOddFractionsProvider()
-    {
-        return array(
+            array(PHP_INT_MAX * 2, PHP_INT_MAX * 4, '1/2'),
+            array(PHP_INT_MAX, PHP_INT_MAX * 8, '1/8'),
+            array(-PHP_INT_MAX * 4, PHP_INT_MAX, '-4'),
+            array(-PHP_INT_MAX * 6, PHP_INT_MAX * 12, '-1/2'),
             array(PHP_INT_MAX * 1, PHP_INT_MAX * 3, '1/3'),
             array(PHP_INT_MAX * 2, PHP_INT_MAX * 9, '2/9'),
             array(-PHP_INT_MAX * 5, PHP_INT_MAX * 8, '-5/8'),
@@ -66,11 +39,11 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test Big Odd Fractions.
+     * Test Big Fractions.
      *
-     * @dataProvider bigOddFractionsProvider
+     * @dataProvider bigFractionsProvider
      */
-    public function testBigOddFractions(
+    public function testBigFractions(
         $numerator,
         $denominator,
         $expectedFraction
