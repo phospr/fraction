@@ -9,8 +9,6 @@
 
 namespace Phospr\Tests;
 
-require_once ('vendor/autoload.php');
-
 use Phospr\Fraction;
 
 /**
@@ -19,7 +17,7 @@ use Phospr\Fraction;
  * @author Tom Haskins-Vaughan <tom@tomhv.uk>
  * @since  0.1.0
  */
-class FractionTest extends \PHPUnit\Framework\TestCase
+class FractionTest extends \PHPUnit_Framework\TestCase
 {
     /**
      * Big Even Fractions provider
