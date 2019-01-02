@@ -287,7 +287,11 @@ class Fraction
         $numerator = $this->getNumerator() * $fraction->getDenominator();
         $denominator = $this->getDenominator() * $fraction->getNumerator();
 
-        return new static($numerator, $denominator);
+        if ($denominator < 0) {
+            $numerator *= -1;
+        }
+
+        return new static($numerator, abs($denominator));
     }
 
     /**
