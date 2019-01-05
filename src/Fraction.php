@@ -53,7 +53,7 @@ class Fraction
      * @param integer $numerator
      * @param integer $denominator
      */
-    public function __construct($numerator, $denominator = 1)
+    public function __construct($numerator, $denominator = 1, $shouldSimplify = true)
     {
         list($numerator, $denominator) = $this->checkLimits(
             $numerator, $denominator
@@ -87,7 +87,9 @@ class Fraction
         $this->numerator = (int) $numerator;
         $this->denominator = (int) $denominator;
 
-        $this->simplify();
+        if ($shouldSimplify) {
+            $this->simplify();
+        }
     }
 
     /**
