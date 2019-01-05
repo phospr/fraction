@@ -461,6 +461,8 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(1, 1, 1, 1, '1'),
             array(5, null, 2, null, '2 1/2'),
             array(6, 13, 2, 7, '1 8/13'),
+            array(-1, 2, -1, 2, '1'),
+            array(-1, 2, 1, 2, '-1'),
         );
     }
 
