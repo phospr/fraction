@@ -20,6 +20,40 @@ use Phospr\Fraction;
 class FractionTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Big Even Fractions provider
+     *
+     * @return array
+     */
+    public static function bigFractionsProvider()
+    {
+        return array(
+            array(PHP_INT_MAX * 2, PHP_INT_MAX * 4, '1/2'),
+            array(PHP_INT_MAX, PHP_INT_MAX * 8, '1/8'),
+            array(-PHP_INT_MAX * 4, PHP_INT_MAX, '-4'),
+            array(-PHP_INT_MAX * 6, PHP_INT_MAX * 12, '-1/2'),
+            array(PHP_INT_MAX * 1, PHP_INT_MAX * 3, '1/3'),
+            array(PHP_INT_MAX * 2, PHP_INT_MAX * 9, '2/9'),
+            array(-PHP_INT_MAX * 5, PHP_INT_MAX * 8, '-5/8'),
+            array(-PHP_INT_MAX * 7, PHP_INT_MAX * 3, '-7/3'),
+        );
+    }
+
+    /**
+     * Test Big Fractions.
+     *
+     * @dataProvider bigFractionsProvider
+     */
+    public function testBigFractions(
+        $numerator,
+        $denominator,
+        $expectedFraction
+    ) {
+        $fraction = new Fraction($numerator, $denominator);
+        $expected = Fraction::fromString($expectedFraction);
+        $this->assertLessThan(0.000000000001, abs($fraction->subtract($expected)->toFloat()));
+    }
+
+    /**
      * Test half
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -427,6 +461,8 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(1, 1, 1, 1, '1'),
             array(5, null, 2, null, '2 1/2'),
             array(6, 13, 2, 7, '1 8/13'),
+            array(-1, 2, -1, 2, '1'),
+            array(-1, 2, 1, 2, '-1'),
         );
     }
 

@@ -55,6 +55,10 @@ class Fraction
      */
     public function __construct($numerator, $denominator = 1)
     {
+        list($numerator, $denominator) = $this->checkLimits(
+            $numerator, $denominator
+        );
+
         if (!is_int($numerator)) {
             throw new InvalidNumeratorException(
                 'Numerator must be an integer'
@@ -84,6 +88,49 @@ class Fraction
         $this->denominator = (int) $denominator;
 
         $this->simplify();
+    }
+
+    /**
+     * Check limits
+     *
+     * @param mixed $numerator
+     * @param mixed $denominator
+     * @return array
+     */
+    protected function checkLimits($numerator, $denominator)
+    {
+        if (($max = max(abs($numerator), abs($denominator))) < PHP_INT_MAX) {
+            return [$numerator, $denominator];
+        }
+
+        $divisor = min(
+            abs($this->getDivisor($max)),
+            abs($numerator),
+            abs($denominator)
+        );
+
+        return [
+            intval($numerator / $divisor),
+            intval($denominator / $divisor),
+        ];
+    }
+
+    /**
+     * Get divisor
+     *
+     * @param mixed $number
+     * @return integer
+     */
+    protected function getDivisor($number)
+    {
+        $divisor = 1;
+
+        while ($number >= PHP_INT_MAX) {
+            $divisor *= 10;
+            $number /= 10;
+        }
+
+        return $divisor;
     }
 
     /**
@@ -240,7 +287,11 @@ class Fraction
         $numerator = $this->getNumerator() * $fraction->getDenominator();
         $denominator = $this->getDenominator() * $fraction->getNumerator();
 
-        return new static($numerator, $denominator);
+        if ($denominator < 0) {
+            $numerator *= -1;
+        }
+
+        return new static($numerator, abs($denominator));
     }
 
     /**
