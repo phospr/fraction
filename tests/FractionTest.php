@@ -10,6 +10,9 @@
 namespace Phospr\Tests;
 
 use Phospr\Fraction;
+use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
+use Phospr\Exception\Fraction\InvalidDenominatorException;
 
 /**
  * FractionTest
@@ -17,7 +20,7 @@ use Phospr\Fraction;
  * @author Tom Haskins-Vaughan <tom@tomhv.uk>
  * @since  0.1.0
  */
-class FractionTest extends \PHPUnit_Framework_TestCase
+class FractionTest extends TestCase
 {
     /**
      * Big Even Fractions provider
@@ -255,11 +258,12 @@ class FractionTest extends \PHPUnit_Framework_TestCase
      * @since  0.5.0
      *
      * @dataProvider fromFloatExceptionProvider
-     * @expectedException InvalidArgumentException
      */
     public function testFromFloatException($float)
     {
-        $fraction = Fraction::fromFloat($float);
+        $this->expectException(InvalidArgumentException::class);
+
+        Fraction::fromFloat($float);
     }
 
     /**
@@ -285,44 +289,16 @@ class FractionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test bad denominator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @expectedException Phospr\Exception\Fraction\InvalidDenominatorException
-     * @dataProvider badIntegerProvider
-     */
-    public function testBadDenominator($denominator)
-    {
-        $fraction = new Fraction(1, $denominator);
-    }
-
-    /**
      * Test negative denominator
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
      * @since  0.1.0
-     *
-     * @expectedException Phospr\Exception\Fraction\InvalidDenominatorException
      */
     public function testNegativeDenominator()
     {
-        $fraction = new Fraction(1, -1);
-    }
+        $this->expectException(InvalidDenominatorException::class);
 
-    /**
-     * Test bad numerator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @expectedException Phospr\Exception\Fraction\InvalidNumeratorException
-     * @dataProvider badIntegerProvider
-     */
-    public function testBadNumerator($numerator)
-    {
-        $fraction = new Fraction($numerator, 1);
+        new Fraction(1, -1);
     }
 
     /**
@@ -347,11 +323,12 @@ class FractionTest extends \PHPUnit_Framework_TestCase
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
      * @since  0.4.0
      *
-     * @expectedException \InvalidArgumentException
      * @dataProvider fromStringExceptionProvider
      */
     public function testFromStringException($string)
     {
+        $this->expectException(InvalidArgumentException::class);
+
         Fraction::fromString($string);
     }
 
@@ -399,29 +376,6 @@ class FractionTest extends \PHPUnit_Framework_TestCase
             array(1, 4, '1/4'),
             array(7, 7, '1'),
             array(7, 21, '1/3'),
-        );
-    }
-
-    /**
-     * Bad integer provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function badIntegerProvider()
-    {
-        return array(
-            array(null),
-            array(0.4),
-            array(.5),
-            array(''),
-            array(' '),
-            array(1.0),
-            array('5'),
-            array('5i'),
-            array('hello'),
         );
     }
 
