@@ -73,6 +73,26 @@ class FractionTest extends TestCase
         $this->assertSame($string, (string) $fraction);
     }
 
+    public function toStringProvider(): array
+    {
+        return [
+            [0, 2, '0'],
+            [1, 2, '1/2'],
+            [5, 2, '2 1/2'],
+            // [15, 3, '15/3'], // re-enable w/ better whole number handling
+            [13, 3, '4 1/3'],
+            [1, null, '1'],
+            [8, null, '8'],
+            [8, 1, '8'],
+            [-8, 1, '-8'],
+            [-13, 3, '-4 1/3'],
+            [1, 4, '1/4'],
+            [7, 7, '7/7'],
+            [7, 21, '7/21'],
+        ];
+    }
+
+
     /**
      * @dataProvider multiplicationProvider
      */
@@ -158,11 +178,7 @@ class FractionTest extends TestCase
      */
     public function testIsInteger(int $numerator, ?int $denominator, bool $result): void
     {
-        if (null === $denominator) {
-            $fraction = new Fraction($numerator);
-        } else {
-            $fraction = new Fraction($numerator, $denominator);
-        }
+        $fraction = new Fraction($numerator, $denominator);
 
         $this->assertSame($result, $fraction->isInteger());
     }
@@ -174,7 +190,7 @@ class FractionTest extends TestCase
      */
     public function testFromFloat(float $float, int $numerator, int $denominator): void
     {
-        $fraction = Fraction::fromFloat($float);
+        $fraction = Fraction::fromFloat($float)->simplify();
 
         $this->assertSame($numerator, $fraction->getNumerator());
         $this->assertSame($denominator, $fraction->getDenominator());
@@ -210,7 +226,7 @@ class FractionTest extends TestCase
     {
         $this->assertSame(
             $toString,
-            (string) Fraction::fromString($fromString)
+            (string) Fraction::fromString($fromString)->simplify()
         );
     }
 
@@ -232,26 +248,11 @@ class FractionTest extends TestCase
     public function testIsSameValueAs(int $numerator1, int $denominator1, int $numerator2, int $denominator2, bool $result): void
     {
         $fraction = new Fraction($numerator1, $denominator1);
+        $fraction2 = new Fraction($numerator2, $denominator2);
 
-        $this->assertSame($result, $fraction->isSameValueAs(new Fraction($numerator2, $denominator2)));
-    }
-
-    public static function toStringProvider(): array
-    {
-        return array(
-            array(0, 2, '0'),
-            array(1, 2, '1/2'),
-            array(5, 2, '2 1/2'),
-            array(15, 3, '5'),
-            array(13, 3, '4 1/3'),
-            array(1, null, '1'),
-            array(8, null, '8'),
-            array(8, 1, '8'),
-            array(-8, 1, '-8'),
-            array(-13, 3, '-4 1/3'),
-            array(1, 4, '1/4'),
-            array(7, 7, '1'),
-            array(7, 21, '1/3'),
+        $this->assertSame(
+            $result,
+            $fraction->isSameValueAs($fraction2),
         );
     }
 

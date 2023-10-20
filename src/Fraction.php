@@ -36,9 +36,10 @@ class Fraction
     public function __construct(int $numerator, int $denominator = 1)
     {
         if ($denominator < 1) {
-            throw new InvalidDenominatorException(
-                'Denominator must be greater than zero'
-            );
+            throw new InvalidDenominatorException(sprintf(
+                'Denominator must be greater than zero.  Got %d',
+                $denominator,
+            ));
         }
 
         if (0 == $numerator) {
@@ -50,16 +51,10 @@ class Fraction
 
         $this->numerator = $numerator;
         $this->denominator = $denominator;
-
-        $this->simplify();
     }
 
     public function __toString(): string
     {
-        if ($this->numerator === $this->denominator) {
-            return '1';
-        }
-
         if (-1*$this->numerator === $this->denominator) {
             return '-1';
         }
@@ -101,12 +96,23 @@ class Fraction
     /**
      * e.g. transform 2/4 into 1/2
      */
-    private function simplify()
+    public function simplify(): Fraction
     {
+        // if the numerator is already zero, then we can't simplify any more
+        if (0 == $this->numerator) {
+            return $this;
+        }
+
+        if ($this->numerator === $this->denominator) {
+            return new Fraction(1);
+        }
+
         $gcd = $this->getGreatestCommonDivisor();
 
-        $this->numerator /= $gcd;
-        $this->denominator /= $gcd;
+        return new self(
+            $this->numerator /= $gcd,
+            $this->denominator /= $gcd,
+        );
     }
 
     private function getGreatestCommonDivisor(): int
@@ -141,7 +147,7 @@ class Fraction
         $numerator = $this->getNumerator() * $fraction->getNumerator();
         $denominator = $this->getDenominator() * $fraction->getDenominator();
 
-        return new static($numerator, $denominator);
+        return (new static($numerator, $denominator))->simplify();
     }
 
     public function divide(Fraction $fraction): Fraction
@@ -151,9 +157,10 @@ class Fraction
 
         if ($denominator < 0) {
             $numerator *= -1;
+            $denominator *= -1;
         }
 
-        return new static($numerator, abs($denominator));
+        return (new static($numerator, $denominator))->simplify();
     }
 
     public function add(Fraction $fraction): Fraction
@@ -164,7 +171,7 @@ class Fraction
         $denominator = $this->getDenominator()
             * $fraction->getDenominator();
 
-        return new static($numerator, $denominator);
+        return (new static($numerator, $denominator))->simplify();
     }
 
     public function subtract(Fraction $fraction): Fraction
@@ -175,12 +182,12 @@ class Fraction
         $denominator = $this->getDenominator()
             * $fraction->getDenominator();
 
-        return new static($numerator, $denominator);
+        return (new static($numerator, $denominator))->simplify();
     }
 
     public function isInteger(): bool
     {
-        return (1 === $this->getDenominator());
+        return (1 === $this->simplify()->getDenominator());
     }
 
     /**
@@ -262,11 +269,14 @@ class Fraction
      */
     public function isSameValueAs(Fraction $fraction): bool
     {
-        if ($this->getNumerator() != $fraction->getNumerator()) {
+        $thisSimplified = $this->simplify();
+        $thatSimplified = $fraction->simplify();
+
+        if ($thisSimplified->getNumerator() != $thatSimplified->getNumerator()) {
             return false;
         }
 
-        if ($this->getDenominator() != $fraction->getDenominator()) {
+        if ($thisSimplified->getDenominator() != $thatSimplified->getDenominator()) {
             return false;
         }
 
