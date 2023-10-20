@@ -4,7 +4,11 @@ on:
   pull_request:
 
 jobs:
-  build-test:
+  phpunit-tests:
+    strategy:
+      matrix:
+        version: [7.3, 7.4, 8.0, 8.1, 8.2]
+
     runs-on: ubuntu-latest
 
     steps:
@@ -12,10 +16,11 @@ jobs:
 
       - uses: php-actions/composer@v6
 
-      - name: PHPUnit Tests
+      - name: PHPUnit Tests (PHP ${{ matrix.version }})
         uses: php-actions/phpunit@v3
         with:
           version: 9.6
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
           args: --coverage-text
+          php_version: ${{ matrix.version }}
