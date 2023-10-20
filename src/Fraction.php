@@ -29,26 +29,10 @@ class Fraction
      */
     const PATTERN_FROM_STRING = '#^(-?\d+)(?:(?: (\d+))?/(\d+))?$#';
 
-    /**
-     * numerator
-     *
-     * @var integer
-     */
-    private $numerator;
+    private int $numerator;
 
-    /**
-     * denominator
-     *
-     * @var integer
-     */
-    private $denominator;
+    private int $denominator;
 
-    /**
-     * __construct
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     */
     public function __construct(int $numerator, int $denominator = 1)
     {
         if ($denominator < 1) {
@@ -70,15 +54,7 @@ class Fraction
         $this->simplify();
     }
 
-    /**
-     * __toString
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->numerator === $this->denominator) {
             return '1';
@@ -112,41 +88,18 @@ class Fraction
         );
     }
 
-    /**
-     * Get numerator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return integer
-     */
-    public function getNumerator()
+    public function getNumerator(): int
     {
         return $this->numerator;
     }
 
-    /**
-     * Get denominator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return integer
-     */
-    public function getDenominator()
+    public function getDenominator(): int
     {
         return $this->denominator;
     }
 
     /**
-     * Simplify
-     *
      * e.g. transform 2/4 into 1/2
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return integer
      */
     private function simplify()
     {
@@ -156,15 +109,7 @@ class Fraction
         $this->denominator /= $gcd;
     }
 
-    /**
-     * Get greatest common divisor
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return integer
-     */
-    private function getGreatestCommonDivisor()
+    private function getGreatestCommonDivisor(): int
     {
         $a = $this->numerator;
         $b = $this->denominator;
@@ -191,17 +136,7 @@ class Fraction
         return $b;
     }
 
-    /**
-     * Multiply this fraction by a given fraction
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @param Fraction $fraction
-     *
-     * @return Fraction
-     */
-    public function multiply(Fraction $fraction)
+    public function multiply(Fraction $fraction): Fraction
     {
         $numerator = $this->getNumerator() * $fraction->getNumerator();
         $denominator = $this->getDenominator() * $fraction->getDenominator();
@@ -209,17 +144,7 @@ class Fraction
         return new static($numerator, $denominator);
     }
 
-    /**
-     * Divide this fraction by a given fraction
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @param Fraction $fraction
-     *
-     * @return Fraction
-     */
-    public function divide(Fraction $fraction)
+    public function divide(Fraction $fraction): Fraction
     {
         $numerator = $this->getNumerator() * $fraction->getDenominator();
         $denominator = $this->getDenominator() * $fraction->getNumerator();
@@ -231,17 +156,7 @@ class Fraction
         return new static($numerator, abs($denominator));
     }
 
-    /**
-     * Add this fraction to a given fraction
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @param Fraction $fraction
-     *
-     * @return Fraction
-     */
-    public function add(Fraction $fraction)
+    public function add(Fraction $fraction): Fraction
     {
         $numerator = ($this->getNumerator() * $fraction->getDenominator())
             + ($fraction->getNumerator() * $this->getDenominator());
@@ -252,17 +167,7 @@ class Fraction
         return new static($numerator, $denominator);
     }
 
-    /**
-     * Subtract a given fraction from this fraction
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @param Fraction $fraction
-     *
-     * @return Fraction
-     */
-    public function subtract(Fraction $fraction)
+    public function subtract(Fraction $fraction): Fraction
     {
         $numerator = ($this->getNumerator() * $fraction->getDenominator())
             - ($fraction->getNumerator() * $this->getDenominator());
@@ -273,30 +178,15 @@ class Fraction
         return new static($numerator, $denominator);
     }
 
-    /**
-     * Whether or not this fraction is an integer
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return boolean
-     */
-    public function isInteger()
+    public function isInteger(): bool
     {
         return (1 === $this->getDenominator());
     }
 
     /**
-     * Create from float
-     *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
-     * @since  0.2.0
-     *
-     * @param float $float
-     *
-     * return Fraction
      */
-    public static function fromFloat($float)
+    public static function fromFloat(float $float): Fraction
     {
         if (is_int($float)) {
             return new self($float);
@@ -332,15 +222,8 @@ class Fraction
      *     * 40
      *     * 3 4/5
      *     * 20 34/67
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.4.0
-     *
-     * @param string $string
-     *
-     * return Fraction
      */
-    public static function fromString($string)
+    public static function fromString(string $string): Fraction
     {
         if (preg_match(self::PATTERN_FROM_STRING, trim($string), $matches)) {
             if (2 === count($matches)) {
@@ -369,32 +252,15 @@ class Fraction
         ));
     }
 
-    /**
-     * Get value as float
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return float
-     */
-    public function toFloat()
+    public function toFloat(): float
     {
         return $this->getNumerator()/$this->getDenominator();
     }
 
     /**
-     * isSameValueAs
-     *
-     * ValueObject comparison
-     *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
-     * @since 1.1.0
-     *
-     * @param Fraction $fraction
-     *
-     * @return bool
      */
-    public function isSameValueAs(Fraction $fraction)
+    public function isSameValueAs(Fraction $fraction): bool
     {
         if ($this->getNumerator() != $fraction->getNumerator()) {
             return false;
