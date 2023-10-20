@@ -11,7 +11,6 @@ namespace Phospr;
 
 use InvalidArgumentException;
 use Phospr\Exception\Fraction\InvalidDenominatorException;
-use Phospr\Exception\Fraction\InvalidNumeratorException;
 
 /**
  * Fraction
@@ -52,70 +51,23 @@ class Fraction
      */
     public function __construct(int $numerator, int $denominator = 1)
     {
-        list($numerator, $denominator) = $this->checkLimits(
-            $numerator, $denominator
-        );
-
-        if ((int) $denominator < 1) {
+        if ($denominator < 1) {
             throw new InvalidDenominatorException(
-                'Denominator must be an integer greater than zero'
+                'Denominator must be greater than zero'
             );
         }
 
         if (0 == $numerator) {
-            $this->numerator = (int) 0;
-            $this->denominator = (int) 1;
+            $this->numerator = 0;
+            $this->denominator = 1;
 
             return;
         }
 
-        $this->numerator = (int) $numerator;
-        $this->denominator = (int) $denominator;
+        $this->numerator = $numerator;
+        $this->denominator = $denominator;
 
         $this->simplify();
-    }
-
-    /**
-     * Check limits
-     *
-     * @param mixed $numerator
-     * @param mixed $denominator
-     * @return array
-     */
-    protected function checkLimits($numerator, $denominator)
-    {
-        if (($max = max(abs($numerator), abs($denominator))) < PHP_INT_MAX) {
-            return [$numerator, $denominator];
-        }
-
-        $divisor = min(
-            abs($this->getDivisor($max)),
-            abs($numerator),
-            abs($denominator)
-        );
-
-        return [
-            intval($numerator / $divisor),
-            intval($denominator / $divisor),
-        ];
-    }
-
-    /**
-     * Get divisor
-     *
-     * @param mixed $number
-     * @return integer
-     */
-    protected function getDivisor($number)
-    {
-        $divisor = 1;
-
-        while ($number >= PHP_INT_MAX) {
-            $divisor *= 10;
-            $number /= 10;
-        }
-
-        return $divisor;
     }
 
     /**
