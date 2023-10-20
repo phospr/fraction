@@ -13,6 +13,7 @@ use Phospr\Fraction;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use Phospr\Exception\Fraction\InvalidDenominatorException;
+use TypeError;
 
 /**
  * FractionTest
@@ -48,6 +49,13 @@ class FractionTest extends TestCase
         $fraction = new Fraction($numerator, $denominator);
         $expected = Fraction::fromString($expectedFraction);
         $this->assertLessThan(0.000000000001, abs($fraction->subtract($expected)->toFloat()));
+    }
+
+    public function testANumeratorThatIsTooBig()
+    {
+        $this->expectException(TypeError::class);
+
+        new Fraction(PHP_INT_MAX + 1);
     }
 
     /**
