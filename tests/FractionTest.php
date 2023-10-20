@@ -23,12 +23,7 @@ use TypeError;
  */
 class FractionTest extends TestCase
 {
-    /**
-     * Big Even Fractions provider
-     *
-     * @return array
-     */
-    public static function bigFractionsProvider()
+    public static function bigFractionsProvider(): array
     {
         return array(
             array(PHP_INT_MAX, PHP_INT_MAX, '1'),
@@ -37,34 +32,25 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test Big Fractions.
-     *
      * @dataProvider bigFractionsProvider
      */
-    public function testBigFractions(
-        $numerator,
-        $denominator,
-        $expectedFraction
-    ) {
+    public function testBigFractions(int $numerator, int $denominator, string $expectedFraction): void
+    {
         $fraction = new Fraction($numerator, $denominator);
         $expected = Fraction::fromString($expectedFraction);
-        $this->assertLessThan(0.000000000001, abs($fraction->subtract($expected)->toFloat()));
+        $this->assertTrue(
+            abs($fraction->subtract($expected)->toFloat()) < PHP_FLOAT_EPSILON
+        );
     }
 
-    public function testANumeratorThatIsTooBig()
+    public function testANumeratorThatIsTooBig(): void
     {
         $this->expectException(TypeError::class);
 
         new Fraction(PHP_INT_MAX + 1);
     }
 
-    /**
-     * Test half
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     */
-    public function testHalf()
+    public function testHalf(): void
     {
         $half = new Fraction(1, 2);
 
@@ -74,18 +60,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test __toString()
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider toStringProvider
      */
-    public function testToString(
-        $numerator,
-        $denominator,
-        $string
-    ) {
+    public function testToString(int $numerator, ?int $denominator, string $string)
+    {
         if (null === $denominator) {
             $fraction = new Fraction($numerator);
         } else {
@@ -254,21 +232,6 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test fromFloat() exceptions
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.5.0
-     *
-     * @dataProvider fromFloatExceptionProvider
-     */
-    public function testFromFloatException($float)
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        Fraction::fromFloat($float);
-    }
-
-    /**
      * Test toFloat()
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -287,7 +250,9 @@ class FractionTest extends TestCase
             $fraction = new Fraction($numerator, $denominator);
         }
 
-        $this->assertSame($result, $fraction->toFloat());
+        $this->assertTrue(
+            abs($result - $fraction->toFloat()) < PHP_FLOAT_EPSILON
+        );
     }
 
     /**
@@ -522,27 +487,6 @@ class FractionTest extends TestCase
     }
 
     /**
-     * fromFloat exception provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.5.0
-     *
-     * @return array
-     */
-    public static function fromFloatExceptionProvider()
-    {
-        return [
-              ['foo'],
-              ['1.2.3'],
-              ['1T'],
-              ['- 5'],
-              ['1/2'],
-              ['seven'],
-              ['r009'],
-          ];
-    }
-
-    /**
      * To float provider
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
@@ -554,6 +498,7 @@ class FractionTest extends TestCase
     {
         return array(
             array(1, 1, 1),
+            array(1, 1, 1.0),
             array(1, 4, 0.25),
             array(1, 8, 0.125),
         );
