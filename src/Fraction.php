@@ -49,27 +49,12 @@ class Fraction
      *
      * @author Tom Haskins-Vaughan <tom@tomhv.uk>
      * @since  0.1.0
-     *
-     * @param integer $numerator
-     * @param integer $denominator
      */
-    public function __construct($numerator, $denominator = 1)
+    public function __construct(int $numerator, int $denominator = 1)
     {
         list($numerator, $denominator) = $this->checkLimits(
             $numerator, $denominator
         );
-
-        if (!is_int($numerator)) {
-            throw new InvalidNumeratorException(
-                'Numerator must be an integer'
-            );
-        }
-
-        if (!is_int($denominator)) {
-            throw new InvalidDenominatorException(
-                'Denominator must be an integer'
-            );
-        }
 
         if ((int) $denominator < 1) {
             throw new InvalidDenominatorException(
