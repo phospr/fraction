@@ -29,12 +29,7 @@ class Fraction
      */
     const PATTERN_FROM_STRING = '#^(-?\d+)(?:(?: (\d+))?/(\d+))?$#';
 
-    /**
-     * numerator
-     *
-     * @var integer
-     */
-    private $numerator;
+    private int $numerator;
 
     /**
      * denominator
