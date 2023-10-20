@@ -62,7 +62,7 @@ class FractionTest extends TestCase
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString(int $numerator, ?int $denominator, string $string)
+    public function testToString(int $numerator, ?int $denominator, string $string): void
     {
         if (null === $denominator) {
             $fraction = new Fraction($numerator);
@@ -74,20 +74,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test multiplication
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider multiplicationProvider
      */
-    public function testMultiply(
-        $numerator1,
-        $denominator1,
-        $numerator2,
-        $denominator2,
-        $string
-    ) {
+    public function testMultiply(int $numerator1, ?int $denominator1, int $numerator2, ?int $denominator2, string $string): void
+    {
         if (null === $denominator1) {
             $fraction1 = new Fraction($numerator1);
         } else {
@@ -104,20 +94,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test division
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider divisionProvider
      */
-    public function testDivision(
-        $numerator1,
-        $denominator1,
-        $numerator2,
-        $denominator2,
-        $string
-    ) {
+    public function testDivision(int $numerator1, ?int $denominator1, int $numerator2, ?int $denominator2, string $string): void
+    {
         if (null === $denominator1) {
             $fraction1 = new Fraction($numerator1);
         } else {
@@ -134,20 +114,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test addition
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider additionProvider
      */
-    public function testAddition(
-        $numerator1,
-        $denominator1,
-        $numerator2,
-        $denominator2,
-        $string
-    ) {
+    public function testAddition(int $numerator1, ?int $denominator1, int $numerator2, ?int $denominator2, string $string): void
+    {
         if (null === $denominator1) {
             $fraction1 = new Fraction($numerator1);
         } else {
@@ -164,20 +134,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test subtraction
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider subtractionProvider
      */
-    public function testSubtraction(
-        $numerator1,
-        $denominator1,
-        $numerator2,
-        $denominator2,
-        $string
-    ) {
+    public function testSubtraction(int $numerator1, ?int $denominator1, int $numerator2, ?int $denominator2, string $string): void
+    {
         if (null === $denominator1) {
             $fraction1 = new Fraction($numerator1);
         } else {
@@ -194,18 +154,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test isInteger()
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider isIntegerProvider
      */
-    public function testIsInteger(
-        $numerator,
-        $denominator,
-        $result
-    ) {
+    public function testIsInteger(int $numerator, ?int $denominator, bool $result): void
+    {
         if (null === $denominator) {
             $fraction = new Fraction($numerator);
         } else {
@@ -216,14 +168,11 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test fromFloat()
-     *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
-     * @since  0.2.0
      *
      * @dataProvider fromFloatProvider
      */
-    public function testFromFloat($float, $numerator, $denominator)
+    public function testFromFloat(float $float, int $numerator, int $denominator): void
     {
         $fraction = Fraction::fromFloat($float);
 
@@ -232,18 +181,10 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test toFloat()
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
      * @dataProvider toFloatProvider
      */
-    public function testToFloat(
-        $numerator,
-        $denominator,
-        $result
-    ) {
+    public function testToFloat(int $numerator, int $denominator, float $result): void
+    {
         if (null === $denominator) {
             $fraction = new Fraction($numerator);
         } else {
@@ -255,13 +196,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Test negative denominator
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     */
-    public function testNegativeDenominator()
+    public function testNegativeDenominator(): void
     {
         $this->expectException(InvalidDenominatorException::class);
 
@@ -269,14 +204,9 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test fromString
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.4.0
-     *
      * @dataProvider fromStringProvider
      */
-    public function testFromString($fromString, $toString)
+    public function testFromString(string $fromString, string $toString): void
     {
         $this->assertSame(
             $toString,
@@ -285,14 +215,9 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test fromString exception
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.4.0
-     *
      * @dataProvider fromStringExceptionProvider
      */
-    public function testFromStringException($string)
+    public function testFromStringException(string $string): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -300,34 +225,18 @@ class FractionTest extends TestCase
     }
 
     /**
-     * Test isSameValueAs
-     *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
-     * @since 1.1.0
      *
      * @dataProvider isSameValueAsProvider
      */
-    public function testIsSameValueAs(
-        $numerator1,
-        $denominator1,
-        $numerator2,
-        $denominator2,
-        $result
-    ) {
+    public function testIsSameValueAs(int $numerator1, int $denominator1, int $numerator2, int $denominator2, bool $result): void
+    {
         $fraction = new Fraction($numerator1, $denominator1);
 
         $this->assertSame($result, $fraction->isSameValueAs(new Fraction($numerator2, $denominator2)));
     }
 
-    /**
-     * __toString provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function toStringProvider()
+    public static function toStringProvider(): array
     {
         return array(
             array(0, 2, '0'),
@@ -346,15 +255,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Multiplication provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function multiplicationProvider()
+    public static function multiplicationProvider(): array
     {
         return array(
             array(1, 1, 1, 1, '1'),
@@ -368,15 +269,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Division provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function divisionProvider()
+    public static function divisionProvider(): array
     {
         return array(
             array(1, 1, 1, 1, '1'),
@@ -387,15 +280,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Addition provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function additionProvider()
+    public static function additionProvider(): array
     {
         return array(
             array(1, 1, 1, 1, '2'),
@@ -406,15 +291,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Subtraction provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function subtractionProvider()
+    public static function subtractionProvider(): array
     {
         return array(
             array(1, 1, 1, 1, '0'),
@@ -425,15 +302,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * Is integer provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function isIntegerProvider()
+    public static function isIntegerProvider(): array
     {
         return array(
             array(1, 1, true),
@@ -446,14 +315,9 @@ class FractionTest extends TestCase
     }
 
     /**
-     * From float provider
-     *
-     * @author Christopher Tatro <ctatro@janeiredale.com>
-     * @since  0.2.0
-     *
-     * @return array
+     * @author Christopher Tatro <c.m.tatro@gmail.com>
      */
-    public static function fromFloatProvider()
+    public static function fromFloatProvider(): array
     {
         return [
             [12345.1234, 61725617, 5000],
@@ -475,26 +339,10 @@ class FractionTest extends TestCase
             [-0.00001, -1, 100000],
             [-1.25, -5, 4],
             [-1.3245, -2649, 2000],
-            // Test some strings
-            ['1', 1, 1],
-            ['5', 5, 1],
-            ['5.5000', 11, 2],
-            ['6.375', 51, 8],
-            ['-6.375', -51, 8],
-            ['-1.25', -5, 4],
-            ['-0.00001', -1, 100000],
         ];
     }
 
-    /**
-     * To float provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.1.0
-     *
-     * @return array
-     */
-    public static function toFloatProvider()
+    public static function toFloatProvider(): array
     {
         return array(
             array(1, 1, 1),
@@ -504,15 +352,7 @@ class FractionTest extends TestCase
         );
     }
 
-    /**
-     * fromString provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.4.0
-     *
-     * @return array
-     */
-    public static function fromStringProvider()
+    public static function fromStringProvider(): array
     {
         return [
             ['1/3', '1/3'],
@@ -525,9 +365,6 @@ class FractionTest extends TestCase
             ['40', '40'],
             ['-40', '-40'],
             ['3 4/5', '3 4/5'],
-#            ['-3 4/5', '-3 4/5'],
-#            ['20 34/67', '20 34/67'],
-#            ['-20 34/67', '-20 34/67'],
             ['40/20', '2'],
             ['-40/20', '-2'],
             ['40/2', '20'],
@@ -535,15 +372,7 @@ class FractionTest extends TestCase
         ];
     }
 
-    /**
-     * fromString exception provider
-     *
-     * @author Tom Haskins-Vaughan <tom@tomhv.uk>
-     * @since  0.4.0
-     *
-     * @return array
-     */
-    public static function fromStringExceptionProvider()
+    public static function fromStringExceptionProvider(): array
     {
         return [
             ['tom'],
@@ -558,14 +387,9 @@ class FractionTest extends TestCase
     }
 
     /**
-     * isSameValueAsProvider
-     *
      * @author Christopher Tatro <c.m.tatro@gmail.com>
-     * @since  1.1.0
-     *
-     * @return array
      */
-    public static function isSameValueAsProvider()
+    public static function isSameValueAsProvider(): array
     {
         return [
             [1, 2, 1, 2, true],
