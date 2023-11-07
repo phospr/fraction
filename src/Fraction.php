@@ -22,7 +22,7 @@ use InvalidArgumentException;
 final class Fraction
 {
     /**
-     * THe pattern used to convert a string to a Fraction
+     * The pattern used to convert a string to a Fraction
      *
      * @var string
      */
