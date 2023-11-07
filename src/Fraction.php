@@ -10,109 +10,190 @@
 namespace Phospr;
 
 use InvalidArgumentException;
-use Phospr\Exception\Fraction\InvalidDenominatorException;
 
 /**
  * Fraction
  *
- * Representation of a fraction, e.g. 3/4, 76/123, etc.
+ * Representation of a fraction, e.g. 3/4, 76/123, 2 3/4 etc.
  *
  * @author Tom Haskins-Vaughan <tom@tomhv.uk>
  * @since  0.1.0
  */
-class Fraction
+final class Fraction
 {
     /**
-     * From string regex pattern
+     * The pattern used to convert a string to a Fraction
      *
      * @var string
      */
-    const PATTERN_FROM_STRING = '#^(-?\d+)(?:(?: (\d+))?/(\d+))?$#';
+    const PATTERN_FROM_STRING = '#^(-?\d+)(?:(?: (-?\d+))?/(-?\d+))?$#';
 
-    private int $numerator;
+    private ?int $wholeNumber = null;
 
-    private int $denominator;
+    private ?int $numerator = null;
 
-    public function __construct(int $numerator, int $denominator = 1)
+    private ?int $denominator = null;
+
+    public function __construct(int $first, ?int $second = null, ?int $third = null)
     {
-        if ($denominator < 1) {
-            throw new InvalidDenominatorException(sprintf(
-                'Denominator must be greater than zero.  Got %d',
-                $denominator,
-            ));
-        }
-
-        if (0 == $numerator) {
-            $this->numerator = 0;
-            $this->denominator = 1;
+        if ($second === null && $third === null) {
+            // only $first was set
+            $this->wholeNumber = $first;
 
             return;
         }
 
-        $this->numerator = $numerator;
-        $this->denominator = $denominator;
+        if ($third === null) {
+            // only $first and $second were set
+            $this->numerator = $first;
+            $this->denominator = $second;
+        } else {
+            // $first, $second and $third were set
+            $this->wholeNumber = $first;
+            $this->numerator = $second;
+            $this->denominator = $third;
+        }
+
+        if ($this->denominator === 0) {
+            throw new DenominatorCannotBeZero();
+        }
+
+        if (
+            $this->wholeNumber !== null &&
+            abs($this->numerator) >= abs($this->denominator)
+        ) {
+            throw new FractionCannotBeBothMixedAndImproper();
+        }
+    }
+
+    public function isWholeNumber(): bool
+    {
+        return $this->numerator === null;
+    }
+
+    public function isProper(): bool
+    {
+        return $this->wholeNumber === null &&
+            abs($this->numerator) < abs($this->denominator);
+    }
+
+    public function isImproper(): bool
+    {
+        return $this->wholeNumber === null &&
+            abs($this->numerator) >= abs($this->denominator);
+    }
+
+    public function isMixed(): bool
+    {
+        return $this->wholeNumber !== null && $this->numerator !== null;
     }
 
     public function __toString(): string
     {
-        if (-1*$this->numerator === $this->denominator) {
-            return '-1';
+        if ($this->numerator === null) {
+            return (string) $this->wholeNumber;
         }
 
-        if (1 === $this->denominator) {
-            return (string) $this->numerator;
-        }
-
-        if (abs($this->numerator) > abs($this->denominator)) {
-            $whole = floor(abs($this->numerator) / $this->denominator);
-
-            if ($this->numerator < 0) {
-                $whole *= -1;
-            }
-
-            return sprintf('%d %d/%d',
-                $whole,
-                abs($this->numerator % $this->denominator),
+        if ($this->wholeNumber === null) {
+            return sprintf('%d/%d',
+                $this->numerator,
                 $this->denominator
             );
         }
 
-        return sprintf('%d/%d',
+        return sprintf('%d %d/%d',
+            $this->wholeNumber,
             $this->numerator,
             $this->denominator
         );
     }
 
-    public function getNumerator(): int
+    public function getNumerator(): ?int
     {
         return $this->numerator;
     }
 
-    public function getDenominator(): int
+    public function getDenominator(): ?int
     {
         return $this->denominator;
     }
 
     /**
-     * e.g. transform 2/4 into 1/2
+     * e.g. transform 2/4 into 1/2 or 21/4 into 5 1/4
      */
     public function simplify(): Fraction
     {
-        // if the numerator is already zero, then we can't simplify any more
-        if (0 == $this->numerator) {
+        if ($this->isWholeNumber()) {
+            // can't be simplified any further
             return $this;
         }
 
-        if ($this->numerator === $this->denominator) {
+        $f = $this;
+
+        if ($this->isMixed()) {
+            $f = $this->toImproper();
+        }
+
+        if ($f->numerator === 0) {
+            return new Fraction(0);
+        }
+
+        if ($f->numerator == $f->denominator) {
             return new Fraction(1);
         }
 
-        $gcd = $this->getGreatestCommonDivisor();
+        if (abs($f->numerator) == abs($f->denominator)) {
+            return new Fraction(-1);
+        }
 
-        return new self(
-            $this->numerator /= $gcd,
-            $this->denominator /= $gcd,
-        );
+        $f = $f->reduce();
+
+        if ($f->denominator === 1) {
+            return new Fraction($f->numerator);
+        }
+
+        if ($f->isImproper()) {
+            return $f->toMixed();
+        }
+
+        $numerator = $f->numerator;
+        $denominator = $f->denominator;
+
+        // make sure negative sign is on the numerator
+        if ($numerator > 0 && $denominator < 0) {
+            $numerator *= -1;
+            $denominator *= -1;
+        }
+
+        return new Fraction($numerator, $denominator);
+    }
+
+    /**
+     * e.g. 1 1/2 => 3/2
+     */
+    public function toImproper(): Fraction
+    {
+        if ($this->isImproper()) {
+            // already improper
+            return $this;
+        }
+
+        if ($this->isWholeNumber()) {
+            return new Fraction($this->wholeNumber, 1);
+        }
+
+        $isPositive = 0 <= $this->wholeNumber
+            * $this->numerator
+            * $this->denominator;
+
+        $numerator = abs($this->numerator) +
+            (abs($this->wholeNumber) * abs($this->denominator));
+
+        if (!$isPositive) {
+            $numerator *= -1;
+        }
+
+        return new Fraction($numerator, $this->denominator);
     }
 
     private function getGreatestCommonDivisor(): int
@@ -142,18 +223,40 @@ class Fraction
         return $b;
     }
 
-    public function multiply(Fraction $fraction): Fraction
+    public function multiply(Fraction $f): Fraction
     {
-        $numerator = $this->getNumerator() * $fraction->getNumerator();
-        $denominator = $this->getDenominator() * $fraction->getDenominator();
+        $f1 = $this;
+        $f2 = $f;
+
+        if ($f1->isMixed() || $f1->isWholeNumber()) {
+            $f1 = $f1->toImproper();
+        }
+
+        if ($f2->isMixed() || $f2->isWholeNumber()) {
+            $f2 = $f2->toImproper();
+        }
+
+        $numerator = $f1->numerator * $f2->numerator;
+        $denominator = $f1->denominator * $f2->denominator;
 
         return (new static($numerator, $denominator))->simplify();
     }
 
-    public function divide(Fraction $fraction): Fraction
+    public function divide(Fraction $f): Fraction
     {
-        $numerator = $this->getNumerator() * $fraction->getDenominator();
-        $denominator = $this->getDenominator() * $fraction->getNumerator();
+        $f1 = $this;
+        $f2 = $f;
+
+        if ($f1->isMixed() || $f1->isWholeNumber()) {
+            $f1 = $f1->toImproper();
+        }
+
+        if ($f2->isMixed() || $f2->isWholeNumber()) {
+            $f2 = $f2->toImproper();
+        }
+
+        $numerator = $f1->numerator * $f2->denominator;
+        $denominator = $f1->denominator * $f2->numerator;
 
         if ($denominator < 0) {
             $numerator *= -1;
@@ -165,29 +268,43 @@ class Fraction
 
     public function add(Fraction $fraction): Fraction
     {
-        $numerator = ($this->getNumerator() * $fraction->getDenominator())
-            + ($fraction->getNumerator() * $this->getDenominator());
+        $numerator = ($this->numerator * $fraction->denominator)
+            + ($fraction->numerator * $this->denominator);
 
-        $denominator = $this->getDenominator()
-            * $fraction->getDenominator();
+        $denominator = $this->denominator
+            * $fraction->denominator;
 
         return (new static($numerator, $denominator))->simplify();
     }
 
-    public function subtract(Fraction $fraction): Fraction
+    public function subtract(Fraction $other): Fraction
     {
-        $numerator = ($this->getNumerator() * $fraction->getDenominator())
-            - ($fraction->getNumerator() * $this->getDenominator());
+        $minuend = $this->simplify()->toImproper();
+        $subtrahend = $other->simplify()->toImproper();
 
-        $denominator = $this->getDenominator()
-            * $fraction->getDenominator();
+        print_r([
+            'minuend' => (string) $minuend,
+            'subtrahend' => (string) $subtrahend,
+        ]);
 
-        return (new static($numerator, $denominator))->simplify();
+        $numerator = ($minuend->numerator * $subtrahend->denominator)
+            - ($subtrahend->numerator * $minuend->denominator);
+
+        $denominator = $minuend->denominator
+            * $subtrahend->denominator;
+
+        print_r([$numerator, $denominator]);
+
+        if ($denominator === 0) {
+            return new Fraction($numerator);
+        }
+
+        return (new Fraction($numerator, $denominator))->simplify();
     }
 
     public function isInteger(): bool
     {
-        return (1 === $this->simplify()->getDenominator());
+        return $this->simplify()->numerator === null;
     }
 
     /**
@@ -218,7 +335,7 @@ class Fraction
         // Multiply to get rid of the decimal places.
         $numerator = (int) ($float*$denominator);
 
-        return new self($numerator, $denominator);
+        return (new Fraction($numerator, $denominator))->simplify();
     }
 
     /**
@@ -240,12 +357,11 @@ class Fraction
                 // either x y/z or x/y
                 if ($matches[2]) {
                     // x y/z
-                    $whole = new self((int) $matches[1]);
-
-                    return $whole->add(new self(
+                    return new self(
+                        (int) $matches[1],
                         (int) $matches[2],
-                        (int) $matches[3]
-                    ));
+                        (int) $matches[3],
+                    );
                 }
 
                 // x/y
@@ -253,15 +369,12 @@ class Fraction
             }
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Cannot parse "%s"',
-            $string
-        ));
+        throw new CannotParseFractionFromString($string);
     }
 
     public function toFloat(): float
     {
-        return $this->getNumerator()/$this->getDenominator();
+        return $this->numerator/$this->denominator;
     }
 
     /**
@@ -272,14 +385,46 @@ class Fraction
         $thisSimplified = $this->simplify();
         $thatSimplified = $fraction->simplify();
 
-        if ($thisSimplified->getNumerator() != $thatSimplified->getNumerator()) {
-            return false;
+        return
+            $thisSimplified->wholeNumber === $thatSimplified->wholeNumber &&
+            $thisSimplified->numerator === $thatSimplified->numerator &&
+            $thisSimplified->denominator === $thatSimplified->denominator
+        ;
+    }
+
+    private function getWholeNumberCombinedWithNumerator(): int
+    {
+        $numerator = $this->numerator +
+            (abs($this->wholeNumber) * $this->denominator);
+
+        if ($this->wholeNumber >= 0) {
+            return $numerator;
+        } else {
+            return -1 * $numerator;
+        }
+    }
+
+    public function reduce(): Fraction
+    {
+        $gcd = $this->getGreatestCommonDivisor();
+
+        $numerator = $this->numerator / $gcd;
+        $denominator = $this->denominator / $gcd;
+
+        return new Fraction($numerator, $denominator);
+    }
+
+    public function toMixed(): Fraction
+    {
+        $wholeNumber = floor(abs($this->numerator) / $this->denominator);
+
+        if ($this->numerator > 0) {
+            $numerator = $this->numerator - ($wholeNumber * $this->denominator);
+        } elseif ($this->numerator < 0) {
+            $numerator = -1 * ($this->numerator + ($wholeNumber * $this->denominator));
+            $wholeNumber *= -1;
         }
 
-        if ($thisSimplified->getDenominator() != $thatSimplified->getDenominator()) {
-            return false;
-        }
-
-        return true;
+        return new Fraction($wholeNumber, $numerator, $this->denominator);
     }
 }
